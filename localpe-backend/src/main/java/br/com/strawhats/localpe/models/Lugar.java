@@ -2,23 +2,28 @@ package br.com.strawhats.localpe.models;
 
 import br.com.strawhats.localpe.enums.Nota;
 
+import javax.persistence.*;
 import java.util.List;
-
+@Entity
 public class Lugar {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
     private String nome;
     private String descricao;
     private String coordenadas;
+    @OneToOne
     private Categoria categoria;
     private Nota nota;
+    @ElementCollection
     private List<String> caracteristicas;
-    private Comentario comentario;
+    @OneToMany
+    private List<Comentario> comentarios;
+    @ElementCollection
     private List<String> fotos;
     private Long visitas;
 
-    public Lugar(Long id, String nome, String descricao, String coordenadas, Categoria categoria,
-                 Nota nota, List<String> caracteristicas, Comentario comentario, List<String> fotos, Long visitas) {
+    public Lugar(Long id, String nome, String descricao, String coordenadas, Categoria categoria, Nota nota, List<String> caracteristicas, List<Comentario> comentarios, List<String> fotos, Long visitas) {
         Id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -26,9 +31,12 @@ public class Lugar {
         this.categoria = categoria;
         this.nota = nota;
         this.caracteristicas = caracteristicas;
-        this.comentario = comentario;
+        this.comentarios = comentarios;
         this.fotos = fotos;
         this.visitas = visitas;
+    }
+
+    public Lugar() {
     }
 
     public Long getId() {
@@ -87,12 +95,12 @@ public class Lugar {
         this.caracteristicas = caracteristicas;
     }
 
-    public Comentario getComentario() {
-        return comentario;
+    public List<Comentario> getComentarios() {
+        return comentarios;
     }
 
-    public void setComentario(Comentario comentario) {
-        this.comentario = comentario;
+    public void setComentarios(List<Comentario> comentarios) {
+        this.comentarios = comentarios;
     }
 
     public List<String> getFotos() {

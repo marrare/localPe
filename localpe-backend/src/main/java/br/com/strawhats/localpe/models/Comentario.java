@@ -1,8 +1,13 @@
 package br.com.strawhats.localpe.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
-
+@Entity
 public class Comentario {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String comentario;
     private Date dataCriacao;
@@ -13,6 +18,10 @@ public class Comentario {
         this.comentario = comentario;
         this.dataCriacao = dataCriacao;
         this.dataAlteracao = dataAlteracao;
+    }
+
+    public Comentario() {
+
     }
 
     public Long getId() {
