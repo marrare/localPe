@@ -31,4 +31,8 @@ public class LugarService {
     public List<Lugar> listarTodosLugares(){
         return lugarDao.findAll();
     }
+
+    public Lugar ExibirLugar(Long id){
+        return lugarDao.findById(id).get();
+    }
 }
