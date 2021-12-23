@@ -73,10 +73,11 @@ public class LugarController {
         return lugarService.listarPorCategoria(categoria);
     }
 
-    @GetMapping("/comentarios/{id}")
-    public List<Comentario> listarComentarios(@PathVariable Long LugarId){
-        return lugarService.listarComentarios(LugarId);
+    @GetMapping("/comentarios/{lugarId}")
+    public List<Comentario> listarComentarios(@PathVariable Long lugarId){
+        return lugarService.listarComentarios(lugarId);
     }
+
 
 
 }
