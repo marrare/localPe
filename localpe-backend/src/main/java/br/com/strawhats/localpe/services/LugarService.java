@@ -1,7 +1,9 @@
 package br.com.strawhats.localpe.services;
 
+import br.com.strawhats.localpe.dao.ComentarioDao;
 import br.com.strawhats.localpe.dao.LugarDao;
 import br.com.strawhats.localpe.models.Categoria;
+import br.com.strawhats.localpe.models.Comentario;
 import br.com.strawhats.localpe.models.Lugar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ public class LugarService {
 
     @Autowired
     LugarDao lugarDao;
+    @Autowired
+    ComentarioDao comentarioDao;
 
     public void cadastrarLugar(Lugar lugar){
         if (lugar != null){
@@ -48,5 +52,9 @@ public class LugarService {
             return lugarDao.findAllByCategoria_DescricaoContains(categoria.getDescricao());
         }
         else return null;
+    }
+
+    public List<Comentario> listarComentarios(Long LugarId) {
+        return lugarDao.getComentariosByLugar_id(LugarId);
     }
 }

@@ -8,7 +8,7 @@ import java.util.List;
 public class Lugar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
     private String nome;
     private String descricao;
     private String coordenadas;
@@ -24,7 +24,7 @@ public class Lugar {
     private Long visitas;
 
     public Lugar(Long id, String nome, String descricao, String coordenadas, Categoria categoria, Nota nota, List<String> caracteristicas, List<Comentario> comentarios, List<String> fotos, Long visitas) {
-        Id = id;
+        this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.coordenadas = coordenadas;
@@ -40,11 +40,11 @@ public class Lugar {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getNome() {
