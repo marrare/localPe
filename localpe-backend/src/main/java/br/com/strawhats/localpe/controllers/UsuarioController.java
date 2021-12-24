@@ -27,6 +27,11 @@ public class UsuarioController {
         usuarioService.deletarUsuarioByid(id);
     }
 
+    @PostMapping("/usuario")
+    public void cadastrarUsuario(@RequestHeader Usuario usuario){
+        usuarioService.cadastrarUsuario(usuario);
+    }
+
 
 
 }

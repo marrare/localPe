@@ -25,8 +25,8 @@ public class LugarController {
             return null;
         }
     }
-    @GetMapping("/lugar")
-    public Lugar exibirLugar(Long id){
+    @GetMapping("/lugar/{id}")
+    public Lugar exibirLugar(@PathVariable Long id){
         try{
             return lugarService.ExibirLugar(id);
         }catch (Exception e){
@@ -36,7 +36,7 @@ public class LugarController {
     }
 
     @PostMapping("/lugar")
-    public void cadastrarLugar(Lugar lugar){
+    public void cadastrarLugar(@RequestHeader Lugar lugar){
         try {
             lugarService.cadastrarLugar(lugar);
         }catch (Exception e){
