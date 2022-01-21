@@ -80,10 +80,15 @@ export default function HomeScreen({ navigation }) {
                     {
                     ListaLugares.map((l, i) => (
                     
-                    <Card>
+                    <Card >
                         <Card.Title>{l.name}</Card.Title>
                         <Card.Divider />
-                        <Card.Image
+                        <Card.Image onPress={()=>navigation.navigate('detalharLugar',{
+                        nome:l.name,
+                        detalhe:l.subtitle,
+                        imagem:l.avatar_url ,
+                       
+                    })}
                         style={{ padding: 0 }}
                         source={{
                             uri:
