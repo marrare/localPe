@@ -17,4 +17,7 @@ public interface LugarDao extends JpaRepository<Lugar,Long> {
 
     @Query("SELECT l.comentarios FROM Lugar l WHERE l.id = ?1")
     public  List<Comentario> getComentariosByLugar_id(Long id);
+    
+    @Query("SELECT * from lugar where lugar.nome = ?1")
+    public List<Lugar> findAllLikeByName(String lugar);
 }
