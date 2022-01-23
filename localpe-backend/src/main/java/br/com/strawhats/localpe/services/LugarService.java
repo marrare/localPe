@@ -41,24 +41,15 @@ public class LugarService {
         return lugarDao.findById(id).get();
     }
 
-    public List<Lugar> listarPorCategoria(Categoria categoria) {
-        if(categoria.getId() != null){
-           return lugarDao.findAllByCategoria_Id(categoria.getId());
-        }
-        if(categoria.getNome() != null){
-            return lugarDao.findAllByCategoria_Nome(categoria.getNome());
-        }
-        if(categoria.getDescricao() != null){
-            return lugarDao.findAllByCategoria_DescricaoContains(categoria.getDescricao());
-        }
-        else return null;
+    public List<Lugar> listarPorCategoria(String categoria) {
+        return  lugarDao.findByCategoriaIgnoreCaseContaining(categoria);
     }
 
     public List<Comentario> listarComentarios(Long LugarId) {
         return lugarDao.getComentariosByLugar_id(LugarId);
     }
     
-    public List<lugar> pesquisarLugares(String lugar){
-           return lugarDao.findAllLikeByName(lugar);
+    public List<Lugar> pesquisarLugares(String lugar){
+           return lugarDao.findByNomeIgnoreCaseContaining(lugar);
     }
 }
