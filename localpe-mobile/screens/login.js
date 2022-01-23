@@ -30,6 +30,38 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function Login({ navigation }) {
 
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+  
+    const firebaseConfig = {
+      apiKey: "AIzaSyCDGOU1OYD2Y6B2XTM3Qi6u2EYfqzHixHI",
+      authDomain: "localpe-1dc7a.firebaseapp.com",
+      projectId: "localpe-1dc7a",
+      storageBucket: "localpe-1dc7a.appspot.com",
+      messagingSenderId: "1006900573391",
+      appId: "1:1006900573391:web:d441b9489baf727b67b3ba"
+    };
+  
+    function loginFirebase() {
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, email, senha)
+        .then((userCredential) => {
+          console.log("conectado")
+          const user = userCredential.user;
+          navigation.navigate("userLogado")
+          
+          // ...
+        })
+        .catch((error) => {
+          console.log("não conectado")
+          const errorCode = error.code;
+          const errorMessage = error.message;
+        });
+    }
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
     return (
 
         <NativeBaseProvider style={styles.container}>
@@ -61,9 +93,9 @@ export default function Login({ navigation }) {
                     <Divider my="2" mb="2" />
                     <VStack space={3}>
 
-
-
                         <Input style={styles.inputLogin}
+                               value={email}
+                               onChangeText={email => setEmail(email)}
 
                             InputLeftElement={
                                 <Icon
@@ -76,6 +108,9 @@ export default function Login({ navigation }) {
                             placeholder="Usuário"
                         />
                         <Input style={styles.inputLogin}
+                               value={senha}
+                               onChangeText={senha => setSenha(senha)}
+
                             type="password"
                             InputRightElement={
                                 <Icon
@@ -88,21 +123,18 @@ export default function Login({ navigation }) {
                             placeholder="Senha"
                         />
 
-
-
                         <Link
                             _text={{ fontSize: '12px', fontWeight: '500', color: '#799ED6' }}
                             alignSelf="flex-end"
                             mt="1">
                             Esqueceu a senha?
                         </Link>
-                        <Button onPress={() => navigation.navigate('userLogado')} style={styles.button} mt="2" colorScheme="indigo" _text={{ color: 'white' }}>
+                        <Button onPress={() => {loginFirebase()}} style={styles.button} mt="2" colorScheme="indigo" _text={{ color: 'white' }}>
                             Login
                         </Button>
 
                     </VStack>
                 </View>
-
             </Box>
         </NativeBaseProvider>
     );

@@ -1,10 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { StyleSheet, View, StatusBar, TextInput, Touchable, TouchableOpacity } from 'react-native';
-import { Linking, StyleProp, TextStyle, ViewStyle, } from 'react-native';
-import { FlatList, ActivityIndicator } from 'react-native';
+//import { Linking, StyleProp, TextStyle, ViewStyle, } from 'react-native';
+//import { FlatList, ActivityIndicator } from 'react-native';
 import { Header as HeaderRNE, HeaderProps, Icon, SafeAreaView, Card } from 'react-native-elements';
-// import {  } from 'native-base'
+import { initializeApp } from "firebase/app";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
 import { MaterialIcons } from "@expo/vector-icons"
 import {
     Button,
@@ -23,9 +25,42 @@ import {
 } from 'native-base';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-
-
 export default function Cadastro({ navigation }) {
+
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCDGOU1OYD2Y6B2XTM3Qi6u2EYfqzHixHI",
+    authDomain: "localpe-1dc7a.firebaseapp.com",
+    projectId: "localpe-1dc7a",
+    storageBucket: "localpe-1dc7a.appspot.com",
+    messagingSenderId: "1006900573391",
+    appId: "1:1006900573391:web:d441b9489baf727b67b3ba"
+  };
+
+  function cadastrarUsuarioFirebase() {
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, email, senha)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        navigation.navigate("inicio")
+        console.log("Usuário criado com sucesso")
+        console.log(user)
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("Falha ao criar usuário")
+        console.log(errorMessage)
+        // ..
+      });
+  }
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
 
     return (
 
@@ -73,6 +108,8 @@ export default function Cadastro({ navigation }) {
                             placeholder="Usuário"
                         />
                         <Input style={styles.inputLogin}
+                                value={email}
+                                onChangeText={email => setEmail(email)}
 
                             InputLeftElement={
                                 <Icon
@@ -85,6 +122,9 @@ export default function Cadastro({ navigation }) {
                             placeholder="E-mail"
                         />
                         <Input style={styles.inputLogin}
+                                value={senha}
+                                onChangeText={senha => setSenha(senha)}
+
                             type="password"
                             InputRightElement={
                                 <Icon
@@ -105,7 +145,7 @@ export default function Cadastro({ navigation }) {
                             mt="1">
                             Esqueceu a senha?
                         </Link>
-                        <Button onPress={() => navigation.navigate('inicio')} style={styles.button} mt="2" colorScheme="indigo" _text={{ color: 'white' }}>
+                        <Button onPress={() => {cadastrarUsuarioFirebase()}} style={styles.button} mt="2" colorScheme="indigo" _text={{ color: 'white' }}>
                             Criar conta
                         </Button>
 
