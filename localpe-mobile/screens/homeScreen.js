@@ -65,6 +65,7 @@ export default function HomeScreen({ navigation }) {
                 }
             //centerComponent={{ text: 'Header', style: styles.heading }}
             />
+            
             < Image style={styles.imagem}
                 source={{ uri: 'http://www.qualviagem.com.br/wp-content/uploads/2015/11/Olinda7_Marcio-Silva.jpg' }}
                 containerStyle={styles.item}
@@ -85,8 +86,9 @@ export default function HomeScreen({ navigation }) {
                         <Card.Divider />
                         <Card.Image onPress={()=>navigation.navigate('detalharLugar',{
                         nome:l.name,
-                        detalhe:l.subtitle,
+                        detalhe:l.description,
                         imagem:l.avatar_url ,
+                        id: l.id
                        
                     })}
                         style={{ padding: 0 }}
