@@ -26,44 +26,44 @@ import {
 } from 'native-base';
 
 export default function DetalharLugar({ route, navigation }) {
-  const [index, setIndex] = React.useState(0);
-  const [dados,setDados] = useState([]);
+    const [index, setIndex] = React.useState(0);
+    const [dados, setDados] = useState([]);
 
-  const [getNome, setNome] = useState();
-  const [getImagem, setImagem] = useState();
-  const [getDetalhe, setDetalhe] = useState();
+    const [getNome, setNome] = useState();
+    const [getImagem, setImagem] = useState();
+    const [getDetalhe, setDetalhe] = useState();
     //     const [getAlterar,setAlterar] = useState();
 
     useEffect(() => {
         if (route.params) {
-            const { name } = route.params
+            const { nome } = route.params
             const { imagem } = route.params
             const { detalhe } = route.params
 
 
-            setNome(name)
+            setNome(nome)
             setImagem(imagem)
             setDetalhe(detalhe)
-            
+
         }
 
-    function resgatarDados() {
-      axios('http://localhost:19006/listarLugares')
-      .then(function (response) {
-        setDados(response.data);
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    }
-    resgatarDados()
+        function resgatarDados() {
+            axios('http://localhost:19006/listarLugares')
+                .then(function (response) {
+                    setDados(response.data);
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+        resgatarDados()
 
-  
 
-}, []);
 
-  
+    }, []);
+
+
 
 
     return (
@@ -90,46 +90,52 @@ export default function DetalharLugar({ route, navigation }) {
                 }
             //centerComponent={{ text: 'Header', style: styles.heading }}
             />
+            <Text style={styles.loginText}>{getNome}</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('inicio')}
+                style={{
+                    marginTop: '16vh',
+                    position: "absolute",
+                    zIndex: "2000",
+                    borderWidth: 2,
+                    marginLeft: "20px",
+                    borderColor: '#fff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 30,
+                    height: 30,
+                    backgroundColor: 'rgb(231 231 231 / 0%)',
+                    borderRadius: 50,
+                }}
+            >
+                <Icon name={"chevron-left"} size={30} color="#fff" />
+            </TouchableOpacity>
             <Image style={styles.imagem}
-                source={{ uri:  getImagem}}
+                source={{ uri: getImagem }}
                 containerStyle={styles.item}
                 PlaceholderContent={<ActivityIndicator />}
             />
 
-           
-            <VStack alignItems="center">
-            <Tab
-        value={index}
-        onChange={(e) => setIndex(e)}
-        indicatorStyle={{
-          backgroundColor: 'white',
-          height: 3,
-        }}
-        variant="primary"
-      >
-        <Tab.Item
-          title="Sobre o destino"
-          titleStyle={{ fontSize: 12 }}
-        />
-        <Tab.Item
-          title="Comentários"
-          titleStyle={{ fontSize: 12 }}  
-        />
-       
-      </Tab>
-   
-        <TabView value={index} onChange={setIndex} animationType="spring">
-          <TabView.Item style={{ backgroundColor: 'white', width: '100%' }}>
-            <Text h1>{getDetalhe}</Text>
-          </TabView.Item>
-          <TabView.Item style={{ backgroundColor: 'white', width: '100%' }}>
-          {
-                    ListaLugares.map((l, i) => (
-                      <Text h1>{l.subtitle}</Text>
-                    ))};
-          </TabView.Item>
-         
-        </TabView>
+
+            <VStack>
+
+
+
+
+
+
+                <HStack style={{ display: "flex", justifyContent: "space-between", paddingHorizontal: "20px", paddingVertical: "10px" }}>
+                    <Button style={styles.button} mt="2" colorScheme="indigo" _text={{ color: 'white' }}>
+                        Sobre o destino
+                    </Button>
+                    <Button style={styles.botaoLogin} mt="2" colorScheme="indigo" _text={{ color: '#EA4335' }}>
+                        Comentários
+                    </Button>
+                </HStack>
+                <View style={styles.boxInputs}>
+                    <Text style={styles.textoCard}>{getDetalhe}</Text>
+                </View>
+
+
             </VStack>
 
 
@@ -138,6 +144,45 @@ export default function DetalharLugar({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+    button: {
+        width: "50%",
+        borderRadius: 4,
+        backgroundColor: '#EA4335',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center'
+    },
+    botaoLogin: {
+        width: "50%",
+        borderRadius: 4,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'fff',
+        shadowColor: '#32325d26',
+        shadowOffset: {
+            width: 5,
+            height: 8
+        },
+        shadowOpacity: 1.50,
+        shadowRadius: 16.00,
+        elevation: 10
+    },
+    loginText: {
+        marginTop: '32vh',
+        position: "absolute",
+        zIndex: "2000",
+        fontSize: '1.4rem',
+        fontWeight: '700',
+        color: '#EA4335',
+        alignSelf: 'left',
+        marginLeft: "20px"
+    },
+    tab: {
+        backgroundColor: "#EA4335",
+        display: "flex",
+        paddingLeft: "0",
+        marginBottom: "0",
+    },
     container: {
         flex: 1,
         backgroundColor: '#fff',
@@ -154,15 +199,6 @@ const styles = StyleSheet.create({
     textoBotaoLogin: {
         color: 'black',
 
-    },
-    botaoLogin: {
-        marginRight: 5,
-        borderRadius: 2,
-        width: 70,
-        height: 30,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#f7f7f7'
     },
     textoBotaoCadastrar: {
         color: 'white',
@@ -212,7 +248,11 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     imagem: {
-        height: '25%'
+        height: '28%'
+    },
+    textoCard: {
+        color: "#525f7f",
+        fontSize: ".875rem"
     },
     input: {
         backgroundColor: '#fff',
@@ -232,6 +272,22 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.58,
         shadowRadius: 16.00,
         elevation: 10
+    },
+    boxInputs: {
+        marginTop: '20px',
+        borderRadius: '8px',
+        marginHorizontal: '20px',
+        padding: '20px',
+        backgroundColor: 'fff',
+        shadowColor: '#32325d26',
+        shadowOffset: {
+            width: 5,
+            height: 8
+        },
+        shadowOpacity: 1.50,
+        shadowRadius: 16.00,
+        elevation: 10
+
     },
     card: {
         marginTop: '10px',
