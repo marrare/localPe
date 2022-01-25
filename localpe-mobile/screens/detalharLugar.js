@@ -1,3 +1,4 @@
+import { Tab, TabView } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, StatusBar, TextInput, Touchable, TouchableOpacity } from 'react-native';
@@ -24,11 +25,27 @@ import {
     Divider,
 } from 'native-base';
 
-export default function HomeScreen({ navigation }) {
-
+export default function DetalharLugar({ route, navigation }) {
+  const [index, setIndex] = React.useState(0);
   const [dados,setDados] = useState([]);
 
-  useEffect(() => {
+  const [getNome, setNome] = useState();
+  const [getImagem, setImagem] = useState();
+  const [getDetalhe, setDetalhe] = useState();
+    //     const [getAlterar,setAlterar] = useState();
+
+    useEffect(() => {
+        if (route.params) {
+            const { name } = route.params
+            const { imagem } = route.params
+            const { detalhe } = route.params
+
+
+            setNome(name)
+            setImagem(imagem)
+            setDetalhe(detalhe)
+            
+        }
 
     function resgatarDados() {
       axios('http://localhost:19006/listarLugares')
@@ -42,7 +59,12 @@ export default function HomeScreen({ navigation }) {
     }
     resgatarDados()
 
-  },[])
+  
+
+}, []);
+
+  
+
 
     return (
 
@@ -50,59 +72,68 @@ export default function HomeScreen({ navigation }) {
             <HeaderRNE backgroundColor='#EA4335'
                 leftComponent={
                     <View>
-                        <Text style={styles.titulo}>Local PE</Text>
+                        <Text style={styles.titulo} onPress={() => navigation.navigate('inicio')}>Local PE</Text>
                     </View>
                 }
                 rightComponent={
                     <View style={styles.headerRight}>
-                        <TouchableOpacity style={styles.botaoLogin} onPress={() => navigation.navigate('login')}>
-                            <Text style={styles.textoBotaoLogin}>Log In</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.botaoCadastrar} onPress={() => navigation.navigate('cadastro')}>
-                            <Text style={styles.textoBotaoCadastrar}>Cadastrar</Text>
-                        </TouchableOpacity>
+                        <Avatar
+                            bg="light.700"
+                            source={{
+                                uri: "https://alpha.nativebase.io/img/native-base-icon.png",
+                            }}
+                        >
+                            RC
+                            <Avatar.Badge bg="green.500" />
+                        </Avatar>
                     </View>
                 }
             //centerComponent={{ text: 'Header', style: styles.heading }}
             />
-            < Image style={styles.imagem}
-                source={{ uri: 'http://www.qualviagem.com.br/wp-content/uploads/2015/11/Olinda7_Marcio-Silva.jpg' }}
+            <Image style={styles.imagem}
+                source={{ uri:  getImagem}}
                 containerStyle={styles.item}
-                PlaceholderContent={< ActivityIndicator />}
+                PlaceholderContent={<ActivityIndicator />}
             />
 
-            < TextInput
-                style={styles.input}
-                placeholder="Search..."
-            />
+           
             <VStack alignItems="center">
-                <View style={styles.card}>
-                    {
+            <Tab
+        value={index}
+        onChange={(e) => setIndex(e)}
+        indicatorStyle={{
+          backgroundColor: 'white',
+          height: 3,
+        }}
+        variant="primary"
+      >
+        <Tab.Item
+          title="Sobre o destino"
+          titleStyle={{ fontSize: 12 }}
+        />
+        <Tab.Item
+          title="Comentários"
+          titleStyle={{ fontSize: 12 }}  
+        />
+       
+      </Tab>
+   
+        <TabView value={index} onChange={setIndex} animationType="spring">
+          <TabView.Item style={{ backgroundColor: 'white', width: '100%' }}>
+            <Text h1>{getDetalhe}</Text>
+          </TabView.Item>
+          <TabView.Item style={{ backgroundColor: 'white', width: '100%' }}>
+          {
                     ListaLugares.map((l, i) => (
-                    
-                    <Card >
-                        <Card.Title>{l.name}</Card.Title>
-                        <Card.Divider />
-                        <Card.Image onPress={()=>navigation.navigate('detalharLugar',{
-                        nome:l.name,
-                        detalhe:l.subtitle,
-                        imagem:l.avatar_url ,
-                       
-                    })}
-                        style={{ padding: 0 }}
-                        source={{
-                            uri:
-                                l.avatar_url,
-                            }}
-                        />  
-                    </Card>
-                    ))
-                    }
-                </View>  
+                      <Text h1>{l.subtitle}</Text>
+                    ))};
+          </TabView.Item>
+         
+        </TabView>
             </VStack>
 
 
-        </NativeBaseProvider >
+        </NativeBaseProvider>
     );
 }
 
@@ -144,7 +175,7 @@ const styles = StyleSheet.create({
         height: 30,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#EA4335',
+        backgroundColor: '#c41414',
         borderBottomColor: '#fff'
     },
     headerContainer: {

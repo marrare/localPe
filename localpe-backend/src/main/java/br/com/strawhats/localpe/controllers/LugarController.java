@@ -77,7 +77,13 @@ public class LugarController {
     public List<Comentario> listarComentarios(@PathVariable Long lugarId){
         return lugarService.listarComentarios(lugarId);
     }
+    
+    
+     @GetMapping("/lugares/pesquisa")
+    public List<Lugar> pesquisarLugares(@ResquestHeader String pesquisa){
+        return lugarService.pesquisarLugares(pesquisa);
 
+    }
 
 
 }

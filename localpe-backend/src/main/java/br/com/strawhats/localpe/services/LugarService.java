@@ -57,4 +57,8 @@ public class LugarService {
     public List<Comentario> listarComentarios(Long LugarId) {
         return lugarDao.getComentariosByLugar_id(LugarId);
     }
+    
+    public List<lugar> pesquisarLugares(String lugar){
+           return lugarDao.findAllLikeByName(lugar);
+    }
 }
