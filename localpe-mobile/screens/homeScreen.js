@@ -31,13 +31,16 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
 
     function resgatarDados() {
-      axios('http://localhost:19006/listarLugares')
+      axios('http://localhost:8080/lugares')
       .then(function (response) {
         setDados(response.data);
         console.log(response);
+          console.log("dados resgatados")
       })
       .catch(function (error) {
-        console.log(error);
+          console.log("erro ao resgatar dados")
+          console.log(error);
+
       });
     }
     resgatarDados()
@@ -78,21 +81,20 @@ export default function HomeScreen({ navigation }) {
             <VStack alignItems="center">
                 <View style={styles.card}>
                     {
-                    ListaLugares.map((l, i) => (
-                    
+                    dados.map((l, i) => (
                     <Card >
-                        <Card.Title>{l.name}</Card.Title>
+                        <Card.Title>{l.nome}</Card.Title>
                         <Card.Divider />
                         <Card.Image onPress={()=>navigation.navigate('detalharLugar',{
-                        nome:l.name,
-                        detalhe:l.subtitle,
-                        imagem:l.avatar_url ,
+                        nome:l.nome,
+                        detalhe:l.descricao,
+                        imagem:l.fotos.at(0) ,
                        
                     })}
                         style={{ padding: 0 }}
                         source={{
                             uri:
-                                l.avatar_url,
+                                l.fotos.at(0),
                             }}
                         />  
                     </Card>
