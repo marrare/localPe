@@ -27,24 +27,21 @@ import {
 export default function HomeScreen({ navigation }) {
 
   const [dados,setDados] = useState([]);
-
-  useEffect(() => {
-
     function resgatarDados() {
-      axios('http://localhost:8080/lugares')
-      .then(function (response) {
-        setDados(response.data);
-        console.log(response);
-          console.log("dados resgatados")
-      })
-      .catch(function (error) {
-          console.log("erro ao resgatar dados")
-          console.log(error);
+        axios('http://localhost:8080/lugares')
+            .then(function (response) {
+                setDados(response.data);
+                console.log(response);
+                console.log("dados resgatados")
+            })
+            .catch(function (error) {
+                console.log("erro ao resgatar dados")
+                console.log(error);
 
-      });
+            });
     }
+  useEffect(() => {
     resgatarDados()
-
   },[])
 
     return (
@@ -74,9 +71,21 @@ export default function HomeScreen({ navigation }) {
                 PlaceholderContent={< ActivityIndicator />}
             />
 
-            < TextInput
+            < TextInput //Caixa de pesquisa
                 style={styles.input}
                 placeholder="Search..."
+                onChangeText={text => {
+                    if (text.trim().length >= 2){
+                    axios('http://localhost:8080/lugares/p/'.concat(text))
+                        .then(function (response) {
+                            setDados(response.data);
+                        })
+                        .catch(function (error) {
+                            console.log("erro ao buscar")
+                        });
+                }else {
+                        resgatarDados()
+                    }}}
             />
             <VStack alignItems="center">
                 <View style={styles.card}>
