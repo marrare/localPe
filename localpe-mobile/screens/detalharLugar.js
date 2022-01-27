@@ -72,25 +72,22 @@ export default function DetalharLugar({ route, navigation }) {
             <HeaderRNE backgroundColor='#EA4335'
                 leftComponent={
                     <View>
-                        <Text style={styles.titulo} onPress={() => navigation.navigate('inicio')}>Local PE</Text>
+                        <Text style={styles.titulo}>Local PE</Text>
                     </View>
                 }
                 rightComponent={
                     <View style={styles.headerRight}>
-                        <Avatar
-                            bg="light.700"
-                            source={{
-                                uri: "https://alpha.nativebase.io/img/native-base-icon.png",
-                            }}
-                        >
-                            RC
-                            <Avatar.Badge bg="green.500" />
-                        </Avatar>
+                        <TouchableOpacity style={styles.botaoLogin} onPress={() => navigation.navigate('login')}>
+                            <Text style={styles.textoBotaoLogin}>Log In</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.botaoCadastrar} onPress={() => navigation.navigate('cadastro')}>
+                            <Text style={styles.textoBotaoCadastrar}>Cadastrar</Text>
+                        </TouchableOpacity>
                     </View>
                 }
             //centerComponent={{ text: 'Header', style: styles.heading }}
             />
-            <Text style={styles.loginText}>{getNome}</Text>
+
             <TouchableOpacity onPress={() => navigation.navigate('inicio')}
                 style={{
                     marginTop: '16vh',
@@ -127,11 +124,12 @@ export default function DetalharLugar({ route, navigation }) {
                     <Button style={styles.button} mt="2" colorScheme="indigo" _text={{ color: 'white' }}>
                         Sobre o destino
                     </Button>
-                    <Button style={styles.botaoLogin} mt="2" colorScheme="indigo" _text={{ color: '#EA4335' }}>
+                    <Button style={styles.botaoComentario} mt="2" colorScheme="indigo" _text={{ color: '#EA4335' }}>
                         Comentários
                     </Button>
                 </HStack>
                 <View style={styles.boxInputs}>
+                    <Text style={styles.headingText}>{getNome}</Text>
                     <Text style={styles.textoCard}>{getDetalhe}</Text>
                 </View>
 
@@ -153,6 +151,15 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     botaoLogin: {
+        marginRight: 5,
+        borderRadius: 2,
+        width: 70,
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f7f7f7'
+    },
+    botaoComentario: {
         width: "50%",
         borderRadius: 4,
         alignItems: 'center',
@@ -167,15 +174,14 @@ const styles = StyleSheet.create({
         shadowRadius: 16.00,
         elevation: 10
     },
-    loginText: {
-        marginTop: '32vh',
-        position: "absolute",
-        zIndex: "2000",
-        fontSize: '1.4rem',
+    headingText: {
+
+        fontSize: '1.2rem',
+        marginBottom: "8PX",
         fontWeight: '700',
         color: '#EA4335',
         alignSelf: 'left',
-        marginLeft: "20px"
+
     },
     tab: {
         backgroundColor: "#EA4335",
@@ -211,7 +217,7 @@ const styles = StyleSheet.create({
         height: 30,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#c41414',
+
         borderBottomColor: '#fff'
     },
     headerContainer: {
