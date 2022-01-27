@@ -25,10 +25,13 @@ import {
     Divider,
 } from 'native-base';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { render } from 'react-dom';
 
 
 
-export default function Login({ navigation }) {
+export default function Login({ route, navigation }) {
+    let isLoggedIn = true;
+
 
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
