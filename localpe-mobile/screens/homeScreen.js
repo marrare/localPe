@@ -30,26 +30,36 @@ import list from '../data/lugares.js';
 export default function HomeScreen({ route, navigation }) {
     let [service, setService] = React.useState("");
     // let [placeToRender, setPlace] = useState([]);
-    // const [dados, setDados] = useState([]);
+    const [dados, setDados] = useState([]);
     const [logged, setLogged] = useState();
+
+
     useEffect(() => {
-        if (route.params) {
-            const { isLoggedIn } = route.params
-            setLogged(isLoggedIn)
 
-
+        function resgatarDados() {
+            axios('http://52.71.103.14:8080/lugares')
+                .then(function (response) {
+                    setDados(response.data);
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
-    })
+        resgatarDados()
+
+    }, [])
+
 
     let placeToRender;
     if (service == "") {
-        placeToRender = ListaLugares;
+        placeToRender = dados;
     } else {
-        placeToRender = ListaLugares.filter(function (lugar) {
-            return lugar.category == service;
+        placeToRender = dados.filter(function (lugar) {
+            return lugar.categoria == service;
         });
     }
-
+    console.log(dados);
     console.log(placeToRender);
 
 
@@ -126,22 +136,6 @@ export default function HomeScreen({ route, navigation }) {
     ]
 
 
-    useEffect(() => {
-
-        function resgatarDados() {
-            axios('http://localhost:19006/listarLugares')
-                .then(function (response) {
-                    setDados(response.data);
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        }
-        resgatarDados()
-
-    }, [])
-
     return (
 
         <NativeBaseProvider>
@@ -153,8 +147,37 @@ export default function HomeScreen({ route, navigation }) {
                 containerStyle={styles.item}
                 PlaceholderContent={< ActivityIndicator />}
             />
+            < TextInput //Caixa de pesquisa
+                style={styles.input}
+                placeholder="Search..."
+                onChangeText={text => {
+                    if (text.trim().length >= 2) {
+                        axios('http://52.71.103.14:8080/lugares/p/'.concat(text))
+                            .then(function (response) {
+                                setDados(response.data);
+                            })
+                            .catch(function (error) {
+                                console.log("erro ao buscar")
+                            });
+                    } else {
 
-            <Select style={styles.select} selectedValue={service} accessibilityLabel="Choose Service" placeholder="Selecione a categoria" _selectedItem={{
+                        function resgatarDados() {
+                            axios('http://52.71.103.14:8080/lugares')
+                                .then(function (response) {
+                                    setDados(response.data);
+                                    console.log(response);
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+                        }
+                    }
+                }}
+            />
+            <View style={styles.select}>
+
+            </View>
+            <Select selectedValue={service} accessibilityLabel="Choose Service" placeholder="Selecione a categoria" _selectedItem={{
                 bg: "teal.600",
                 endIcon: <CheckIcon size="5" />
             }} mt={1} onValueChange={itemValue => setService(itemValue)}>
@@ -165,6 +188,8 @@ export default function HomeScreen({ route, navigation }) {
 
             </Select>
 
+
+
             <VStack alignItems="center">
                 <View style={styles.card}>
 
@@ -172,19 +197,19 @@ export default function HomeScreen({ route, navigation }) {
                         placeToRender.map((l, i) => (
 
                             <Card >
-                                <Card.Title>{l.name}</Card.Title>
+                                <Card.Title>{l.nome}</Card.Title>
                                 <Card.Divider />
                                 <Card.Image onPress={() => navigation.navigate('detalharLugar', {
-                                    nome: l.name,
-                                    detalhe: l.description,
-                                    imagem: l.avatar_url,
+                                    nome: l.nome,
+                                    detalhe: l.descricao,
+                                    imagem: l.fotos.at(0),
                                     id: l.id
 
                                 })}
                                     style={{ padding: 0 }}
                                     source={{
                                         uri:
-                                            l.avatar_url,
+                                            l.fotos.at(0),
                                     }}
                                 />
                             </Card>
@@ -200,7 +225,10 @@ export default function HomeScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
     select: {
-        width: "30%"
+
+        marginTop: "20px"
+
+
     },
     container: {
         flex: 1,
@@ -286,8 +314,8 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         borderRadius: '2%',
         position: 'absolute',
-
-        top: 220,
+        bottom: "20px",
+        top: 182,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
