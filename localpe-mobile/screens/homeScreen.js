@@ -130,7 +130,11 @@ export default function HomeScreen({ route, navigation }) {
             nome: "Igreja"
         },
         {
-            id:6,
+            id: 6,
+            nome:"Atrações"
+        },
+        {
+            id:7,
             nome:""
         }
 
