@@ -3,17 +3,21 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, StatusBar, TextInput, Touchable, TouchableOpacity } from 'react-native';
 import { Linking, StyleProp, TextStyle, ViewStyle, } from 'react-native';
 import { FlatList, ActivityIndicator } from 'react-native';
-import { Header as HeaderRNE, HeaderProps, Icon, SafeAreaView, Card } from 'react-native-elements';
+import { Header as HeaderRNE, HeaderProps, SafeAreaView, Card } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import axios from 'axios';
 import ListaLugares from '../data/lugares.js'
 import {
+    Select,
+    CheckIcon,
     Avatar,
+    Icon,
     Button,
     Image,
     NativeBaseProvider,
     Box,
     Text,
+    Modal,
     Input,
     Heading,
     VStack,
@@ -24,25 +28,81 @@ import {
     Divider,
 } from 'native-base';
 
-export default function UserLogado({ navigation }) {
+export default function UserLogado({ route, navigation }) {
+    const [showModal, setShowModal] = useState(false);
+    let [service, setService] = React.useState("");
+    // let [placeToRender, setPlace] = useState([]);
+    // const [dados, setDados] = useState([]);
+    const [logged, setLogged] = useState();
+    useEffect(() => {
+        if (route.params) {
+            const { isLoggedIn } = route.params
+            setLogged(isLoggedIn)
 
-  const [dados,setDados] = useState([]);
 
-  useEffect(() => {
+        }
+    })
 
-    function resgatarDados() {
-      axios('http://localhost:19006/listarLugares')
-      .then(function (response) {
-        setDados(response.data);
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    let placeToRender;
+    if (service == "") {
+        placeToRender = ListaLugares;
+    } else {
+        placeToRender = ListaLugares.filter(function (lugar) {
+            return lugar.category == service;
+        });
     }
-    resgatarDados()
 
-  },[])
+    console.log(placeToRender);
+
+
+
+
+
+
+    const lugares = [
+
+    ]
+    const categorias = [
+        {
+            id: 1,
+            nome: "Praça"
+        },
+        {
+            id: 2,
+            nome: "Monumento Histórico"
+        },
+        {
+            id: 3,
+            nome: "Cachoeira"
+        },
+        {
+            id: 4,
+            nome: "Parque"
+        },
+        {
+            id: 5,
+            nome: "Igreja"
+        },
+
+    ]
+
+
+    useEffect(() => {
+
+        function resgatarDados() {
+            axios('http://localhost:19006/listarLugares')
+                .then(function (response) {
+                    setDados(response.data);
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+        resgatarDados()
+
+    }, [])
+
 
     return (
 
@@ -54,49 +114,85 @@ export default function UserLogado({ navigation }) {
                     </View>
                 }
                 rightComponent={
-                    <View style={styles.headerRight}>
-                        <Avatar
-                            bg="light.700"
+                    <View style={styles.headerRight} >
+                        <Avatar onPress={() => setShowModal(true)}
+                            bg="light.200"
                             source={{
-                                uri: "https://alpha.nativebase.io/img/native-base-icon.png",
+                                uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Breezeicons-actions-22-im-user.svg/1200px-Breezeicons-actions-22-im-user.svg.png",
                             }}
                         >
-                            RC
+
                             <Avatar.Badge bg="green.500" />
                         </Avatar>
                     </View>
                 }
             //centerComponent={{ text: 'Header', style: styles.heading }}
             />
+            <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+                <Modal.Content maxWidth="400px">
+                    <Modal.CloseButton />
+                    <Modal.Header>Contact Us</Modal.Header>
+                    <Modal.Body>
+                        <FormControl>
+                            <FormControl.Label>Name</FormControl.Label>
+                            <Input />
+                        </FormControl>
+                        <FormControl mt="3">
+                            <FormControl.Label>Email</FormControl.Label>
+                            <Input />
+                        </FormControl>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button.Group space={2}>
+                            <Button variant="ghost" colorScheme="blueGray" onPress={() => {
+                                setShowModal(false);
+                            }}>
+                                Cancel
+                            </Button>
+                            <Button onPress={() => {
+                                setShowModal(false);
+                            }}>
+                                Save
+                            </Button>
+                        </Button.Group>
+                    </Modal.Footer>
+                </Modal.Content>
+            </Modal>
             <Image style={styles.imagem}
                 source={{ uri: 'http://www.qualviagem.com.br/wp-content/uploads/2015/11/Olinda7_Marcio-Silva.jpg' }}
                 containerStyle={styles.item}
                 PlaceholderContent={<ActivityIndicator />}
             />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Search..."
-            />
+            <Select style={styles.select} selectedValue={service} accessibilityLabel="Choose Service" placeholder="Selecione a categoria" _selectedItem={{
+                bg: "teal.600",
+                endIcon: <CheckIcon size="5" />
+            }} mt={1} onValueChange={itemValue => setService(itemValue)}>
+                {
+                    categorias.map((categoria, i) => (
+                        <Select.Item label={categoria.nome} value={categoria.nome} />
+                    ))}
+
+            </Select>
             <VStack alignItems="center">
                 <View style={styles.card}>
                     {
-                    ListaLugares.map((l, i) => (
-                    
-                    <Card>
-                        <Card.Title>{l.name}</Card.Title>
-                        <Card.Divider />
-                        <Card.Image
-                        style={{ padding: 0 }}
-                        source={{
-                            uri:
-                                l.avatar_url,
-                            }}
-                        />  
-                    </Card>
-                    ))
+                        placeToRender.map((l, i) => (
+
+                            <Card>
+                                <Card.Title>{l.name}</Card.Title>
+                                <Card.Divider />
+                                <Card.Image
+                                    style={{ padding: 0 }}
+                                    source={{
+                                        uri:
+                                            l.avatar_url,
+                                    }}
+                                />
+                            </Card>
+                        ))
                     }
-                </View>  
+                </View>
             </VStack>
 
 
