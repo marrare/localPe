@@ -202,13 +202,14 @@ export default function HomeScreen({ route, navigation }) {
                                     nome: l.nome,
                                     detalhe: l.descricao,
                                     imagem: l.fotos.at(0),
-                                    id: l.id
+                                    id: l.id,
+                                    categoria: l.categoria
 
                                 })}
                                     style={{ padding: 0 }}
                                     source={{
                                         uri:
-                                            l.fotos.at(0),
+                                            l.fotos.at(0)
                                     }}
                                 />
                             </Card>

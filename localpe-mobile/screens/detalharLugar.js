@@ -32,6 +32,7 @@ export default function DetalharLugar({ route, navigation }) {
     const [getNome, setNome] = useState();
     const [getImagem, setImagem] = useState();
     const [getDetalhe, setDetalhe] = useState();
+    const [getCategoria, setCategoria] = useState();
     //     const [getAlterar,setAlterar] = useState();
 
     useEffect(() => {
@@ -39,11 +40,13 @@ export default function DetalharLugar({ route, navigation }) {
             const { nome } = route.params
             const { imagem } = route.params
             const { detalhe } = route.params
+            const { categoria } = route.params
 
 
             setNome(nome)
             setImagem(imagem)
             setDetalhe(detalhe)
+            setCategoria(categoria)
 
         }
 
@@ -128,10 +131,13 @@ export default function DetalharLugar({ route, navigation }) {
                         Comentários
                     </Button>
                 </HStack>
+
                 <View style={styles.boxInputs}>
                     <Text style={styles.headingText}>{getNome}</Text>
                     <Text style={styles.textoCard}>{getDetalhe}</Text>
+                    <Text style={styles.categoria}> {getCategoria}</Text>
                 </View>
+
 
 
             </VStack>
@@ -300,5 +306,11 @@ const styles = StyleSheet.create({
         padding: '15px',
         width: '100%',
 
+    },
+    categoria:{
+        marginTop: 20,
+        justifyContent: "flex-end",
+        alignItems:"baseline",
+        color: "#EA4335"
     }
 });
