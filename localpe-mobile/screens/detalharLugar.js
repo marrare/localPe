@@ -90,7 +90,7 @@ export default function DetalharLugar({ route, navigation }) {
 
             <TouchableOpacity onPress={() => navigation.navigate('inicio')}
                 style={{
-                    marginTop: '16vh',
+                    marginTop: '13vh',
                     position: "absolute",
                     zIndex: "2000",
                     borderWidth: 2,
