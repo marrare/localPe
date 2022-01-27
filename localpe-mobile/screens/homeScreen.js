@@ -8,6 +8,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import axios from 'axios';
 import ListaLugares from '../data/lugares.js'
 import {
+    Select,
+    CheckIcon,
     Avatar,
     Button,
     Image,
@@ -23,84 +25,172 @@ import {
     HStack,
     Divider,
 } from 'native-base';
+import list from '../data/lugares.js';
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ route, navigation }) {
+    let [service, setService] = React.useState("");
+    // let [placeToRender, setPlace] = useState([]);
+    // const [dados, setDados] = useState([]);
+    const [logged, setLogged] = useState();
+    useEffect(() => {
+        if (route.params) {
+            const { isLoggedIn } = route.params
+            setLogged(isLoggedIn)
 
-  const [dados,setDados] = useState([]);
 
-  useEffect(() => {
+        }
+    })
 
-    function resgatarDados() {
-      axios('http://localhost:19006/listarLugares')
-      .then(function (response) {
-        setDados(response.data);
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    let placeToRender;
+    if (service == "") {
+        placeToRender = ListaLugares;
+    } else {
+        placeToRender = ListaLugares.filter(function (lugar) {
+            return lugar.category == service;
+        });
     }
-    resgatarDados()
 
-  },[])
+    console.log(placeToRender);
+
+
+
+    let header;
+    if (logged) {
+        header = <HeaderRNE backgroundColor='#EA4335'
+            leftComponent={
+                <View>
+                    <Text style={styles.titulo} onPress={() => navigation.navigate('inicio')}>Local PE</Text>
+                </View>
+            }
+            rightComponent={
+                <View style={styles.headerRight}>
+                    <Avatar
+                        bg="light.700"
+                        source={{
+                            uri: "https://alpha.nativebase.io/img/native-base-icon.png",
+                        }}
+                    >
+                        RC
+                        <Avatar.Badge bg="green.500" />
+                    </Avatar>
+                </View>
+            }
+        //centerComponent={{ text: 'Header', style: styles.heading }}
+        />;
+    } else {
+        header = <HeaderRNE backgroundColor='#EA4335'
+            leftComponent={
+                <View>
+                    <Text style={styles.titulo}>Local PE</Text>
+                </View>
+            }
+            rightComponent={
+                <View style={styles.headerRight}>
+                    <TouchableOpacity style={styles.botaoLogin} onPress={() => navigation.navigate('login')}>
+                        <Text style={styles.textoBotaoLogin}>Log In</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.botaoCadastrar} onPress={() => navigation.navigate('cadastro')}>
+                        <Text style={styles.textoBotaoCadastrar}>Cadastrar</Text>
+                    </TouchableOpacity>
+                </View>
+            }
+        //centerComponent={{ text: 'Header', style: styles.heading }}
+        />
+    }
+
+    const lugares = [
+
+    ]
+    const categorias = [
+        {
+            id: 1,
+            nome: "Praça"
+        },
+        {
+            id: 2,
+            nome: "Monumento Histórico"
+        },
+        {
+            id: 3,
+            nome: "Cachoeira"
+        },
+        {
+            id: 4,
+            nome: "Parque"
+        },
+        {
+            id: 5,
+            nome: "Igreja"
+        },
+
+    ]
+
+
+    useEffect(() => {
+
+        function resgatarDados() {
+            axios('http://localhost:19006/listarLugares')
+                .then(function (response) {
+                    setDados(response.data);
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+        resgatarDados()
+
+    }, [])
 
     return (
 
         <NativeBaseProvider>
-            <HeaderRNE backgroundColor='#EA4335'
-                leftComponent={
-                    <View>
-                        <Text style={styles.titulo}>Local PE</Text>
-                    </View>
-                }
-                rightComponent={
-                    <View style={styles.headerRight}>
-                        <TouchableOpacity style={styles.botaoLogin} onPress={() => navigation.navigate('login')}>
-                            <Text style={styles.textoBotaoLogin}>Log In</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.botaoCadastrar} onPress={() => navigation.navigate('cadastro')}>
-                            <Text style={styles.textoBotaoCadastrar}>Cadastrar</Text>
-                        </TouchableOpacity>
-                    </View>
-                }
-            //centerComponent={{ text: 'Header', style: styles.heading }}
-            />
-            
+
+            {header}
+
             < Image style={styles.imagem}
                 source={{ uri: 'http://www.qualviagem.com.br/wp-content/uploads/2015/11/Olinda7_Marcio-Silva.jpg' }}
                 containerStyle={styles.item}
                 PlaceholderContent={< ActivityIndicator />}
             />
 
-            < TextInput
-                style={styles.input}
-                placeholder="Search..."
-            />
+            <Select style={styles.select} selectedValue={service} accessibilityLabel="Choose Service" placeholder="Selecione a categoria" _selectedItem={{
+                bg: "teal.600",
+                endIcon: <CheckIcon size="5" />
+            }} mt={1} onValueChange={itemValue => setService(itemValue)}>
+                {
+                    categorias.map((categoria, i) => (
+                        <Select.Item label={categoria.nome} value={categoria.nome} />
+                    ))}
+
+            </Select>
+
             <VStack alignItems="center">
                 <View style={styles.card}>
+
                     {
-                    ListaLugares.map((l, i) => (
-                    
-                    <Card >
-                        <Card.Title>{l.name}</Card.Title>
-                        <Card.Divider />
-                        <Card.Image onPress={()=>navigation.navigate('detalharLugar',{
-                        nome:l.name,
-                        detalhe:l.description,
-                        imagem:l.avatar_url ,
-                        id: l.id
-                       
-                    })}
-                        style={{ padding: 0 }}
-                        source={{
-                            uri:
-                                l.avatar_url,
-                            }}
-                        />  
-                    </Card>
-                    ))
+                        placeToRender.map((l, i) => (
+
+                            <Card >
+                                <Card.Title>{l.name}</Card.Title>
+                                <Card.Divider />
+                                <Card.Image onPress={() => navigation.navigate('detalharLugar', {
+                                    nome: l.name,
+                                    detalhe: l.description,
+                                    imagem: l.avatar_url,
+                                    id: l.id
+
+                                })}
+                                    style={{ padding: 0 }}
+                                    source={{
+                                        uri:
+                                            l.avatar_url,
+                                    }}
+                                />
+                            </Card>
+                        ))
                     }
-                </View>  
+                </View>
             </VStack>
 
 
@@ -109,6 +199,9 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+    select: {
+        width: "30%"
+    },
     container: {
         flex: 1,
         backgroundColor: '#fff',
