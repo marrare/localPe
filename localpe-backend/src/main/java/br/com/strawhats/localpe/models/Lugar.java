@@ -10,10 +10,10 @@ public class Lugar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+    @Lob
     private String descricao;
     private String coordenadas;
-    @OneToOne
-    private Categoria categoria;
+    private String categoria;
     private Nota nota;
     @ElementCollection
     private List<String> caracteristicas;
@@ -23,7 +23,7 @@ public class Lugar {
     private List<String> fotos;
     private Long visitas;
 
-    public Lugar(Long id, String nome, String descricao, String coordenadas, Categoria categoria, Nota nota, List<String> caracteristicas, List<Comentario> comentarios, List<String> fotos, Long visitas) {
+    public Lugar(Long id, String nome, String descricao, String coordenadas, String categoria, Nota nota, List<String> caracteristicas, List<Comentario> comentarios, List<String> fotos, Long visitas) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -71,11 +71,11 @@ public class Lugar {
         this.coordenadas = coordenadas;
     }
 
-    public Categoria getCategoria() {
+    public String getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(Categoria categoria) {
+    public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
 

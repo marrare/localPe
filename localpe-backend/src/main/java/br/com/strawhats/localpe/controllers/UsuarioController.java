@@ -6,7 +6,8 @@ import br.com.strawhats.localpe.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
+@CrossOrigin(origins = "*")
+@RestController
 @Controller
 public class UsuarioController {
    @Autowired
