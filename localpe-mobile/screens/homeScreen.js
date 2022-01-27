@@ -33,23 +33,20 @@ export default function HomeScreen({ route, navigation }) {
     const [dados, setDados] = useState([]);
     const [logged, setLogged] = useState();
 
+    function resgatarDados() {
+        axios('http://52.71.103.14:8080/lugares')
+            .then(function (response) {
+                setDados(response.data);
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
 
     useEffect(() => {
-
-        function resgatarDados() {
-            axios('http://52.71.103.14:8080/lugares')
-                .then(function (response) {
-                    setDados(response.data);
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        }
         resgatarDados()
-
     }, [])
-
 
     let placeToRender;
     if (service == "") {
@@ -132,6 +129,10 @@ export default function HomeScreen({ route, navigation }) {
             id: 5,
             nome: "Igreja"
         },
+        {
+            id:6,
+            nome:""
+        }
 
     ]
 
@@ -160,8 +161,6 @@ export default function HomeScreen({ route, navigation }) {
                                 console.log("erro ao buscar")
                             });
                     } else {
-
-                        function resgatarDados() {
                             axios('http://52.71.103.14:8080/lugares')
                                 .then(function (response) {
                                     setDados(response.data);
@@ -172,7 +171,7 @@ export default function HomeScreen({ route, navigation }) {
                                 });
                         }
                     }
-                }}
+                }
             />
             <View style={styles.select}>
 
