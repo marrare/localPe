@@ -35,6 +35,7 @@ export default function DetalharLugar({ route, navigation }) {
     const [getImagem, setImagem] = useState();
     const [getDetalhe, setDetalhe] = useState();
     const [getComentario, setComentario] = useState();
+    const [getCategoria, setCategoria] = useState();
     const [modalVisible, setModalVisible] = React.useState(false);
     //     const [getAlterar,setAlterar] = useState();
 
@@ -46,10 +47,10 @@ export default function DetalharLugar({ route, navigation }) {
             const { imagem } = route.params
             const { detalhe } = route.params
             const { id } = route.params
-
+            const { categoria } = route.params
 
             setId(id)
-
+            setCategoria(categoria)
             setNome(nome)
             setImagem(imagem)
             setDetalhe(detalhe)
