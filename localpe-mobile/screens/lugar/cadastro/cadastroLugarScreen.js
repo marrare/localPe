@@ -30,7 +30,6 @@ export default function CadastroLugarScreen({ route, navigation }) {
   const [descricao, setDescricao] = useState("");
   const [nome, setNome] = useState("");
   const [categoria, setCategoria] = useState("");
-  const [fotos, setFotos] = useState("");
 
   useEffect(() => {
     if (route.params) {
@@ -54,7 +53,6 @@ export default function CadastroLugarScreen({ route, navigation }) {
         nome: nome,
         descricao: descricao,
         categoria: categoria,
-        foto: fotos
       }
     }).then((response) => {
       navigation.navigate("userLogado")
@@ -128,8 +126,6 @@ export default function CadastroLugarScreen({ route, navigation }) {
               <Select.Item label={cat.nome} value={cat.nome} />
             ))}
           </Select>
-
-          <input onChange={upload} type = 'file' multiple/>
 
           <Button
             onPress={() => {
