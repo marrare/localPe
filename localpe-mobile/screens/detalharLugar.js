@@ -10,6 +10,7 @@ import axios from 'axios';
 import ListaLugares from '../data/lugares.js'
 import {
     Avatar,
+    Modal,
     Button,
     Image,
     NativeBaseProvider,
@@ -28,18 +29,26 @@ import {
 export default function DetalharLugar({ route, navigation }) {
     const [index, setIndex] = React.useState(0);
     const [dados, setDados] = useState([]);
-
+    let [botao, setbotao] = React.useState("");
     const [getNome, setNome] = useState();
+    const [getId, setId] = useState();
     const [getImagem, setImagem] = useState();
     const [getDetalhe, setDetalhe] = useState();
+    const [getComentario, setComentario] = useState();
+    const [modalVisible, setModalVisible] = React.useState(false);
     //     const [getAlterar,setAlterar] = useState();
+
+
 
     useEffect(() => {
         if (route.params) {
             const { nome } = route.params
             const { imagem } = route.params
             const { detalhe } = route.params
+            const { id } = route.params
 
+
+            setId(id)
 
             setNome(nome)
             setImagem(imagem)
@@ -47,21 +56,63 @@ export default function DetalharLugar({ route, navigation }) {
 
         }
 
-        function resgatarDados() {
-            axios('http://localhost:19006/listarLugares')
-                .then(function (response) {
-                    setDados(response.data);
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        }
-        resgatarDados()
+
+
 
 
 
     }, []);
+
+
+    function resgatarDados() {
+        axios('http://52.71.103.14:8080/comentario/' + getId)
+            .then(function (response) {
+                setDados(response.data);
+                console.log(response);
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+    resgatarDados();
+    console.log(getComentario);
+    function adicionarComentario(comentario, idLugar) {
+
+        axios.post('http://52.71.103.14:8080/comentario/' + idLugar, {}, {
+            headers: {
+
+                comentario: comentario,
+                usuarioId: "beta633"
+
+            }
+        })
+            .then(function (response) {
+                console.log(response);
+                resgatarDados();
+                setComentario("")
+
+            })
+            .catch(function (error) {
+
+                console.log(error);
+            });
+    }
+
+
+
+    // let placeToRender;
+    // if (service == "") {
+    //     placeToRender = dados;
+    // } else {
+    //     placeToRender = dados.filter(function (lugar) {
+    //         return lugar.categoria == service;
+    //     });
+    // }
+
+
+
+
 
 
 
@@ -121,17 +172,64 @@ export default function DetalharLugar({ route, navigation }) {
 
 
                 <HStack style={{ display: "flex", justifyContent: "space-between", paddingHorizontal: "20px", paddingVertical: "10px" }}>
-                    <Button style={styles.button} mt="2" colorScheme="indigo" _text={{ color: 'white' }}>
+                    {/* <Button style={styles.button} mt="2" colorScheme="indigo" _text={{ color: 'white' }}>
                         Sobre o destino
-                    </Button>
-                    <Button style={styles.botaoComentario} mt="2" colorScheme="indigo" _text={{ color: '#EA4335' }}>
-                        Comentários
-                    </Button>
+                    </Button> */}
+
                 </HStack>
+
                 <View style={styles.boxInputs}>
-                    <Text style={styles.headingText}>{getNome}</Text>
+                    <Text style={styles.headingText}>Sobre o destino</Text>
                     <Text style={styles.textoCard}>{getDetalhe}</Text>
+                    <Text style={styles.categoria}> {getCategoria}</Text>
                 </View>
+
+                <View style={styles.boxInputs}>
+                    <Text style={styles.headingText}>Comentários</Text>
+
+                    {
+                        dados.map((l, i) => (
+                            <View>
+                                <Text style={styles.textoAnonimo}>Anônimo</Text>
+                                <Text style={styles.textoCard}>{l.comentario}</Text>
+                            </View>
+
+                        ))}
+                    <Button style={styles.button} onPress={() => {
+                        setModalVisible(!modalVisible);
+                    }} mt="2" colorScheme="indigo" _text={{ color: 'white' }}>
+                        Comentar
+                    </Button>
+                </View>
+                <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
+                    <Modal.Content>
+                        <Modal.CloseButton />
+                        <Modal.Header>Deseja adicionar um comentário sobre o lugar?</Modal.Header>
+                        <Modal.Body>
+                            <FormControl>
+                                <FormControl.Label>Comentário</FormControl.Label>
+                                <Input value={getComentario}
+                                    onChangeText={getComentario => setComentario(getComentario)} />
+                            </FormControl>
+
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button.Group space={2}>
+                                <Button variant="ghost" colorScheme="blueGray" onPress={() => {
+                                    setModalVisible(false);
+                                }}>
+                                    Cancelar
+                                </Button>
+                                <Button onPress={() => {
+                                    setModalVisible(false);
+                                    adicionarComentario(getComentario, getId)
+                                }}>
+                                    Salvar
+                                </Button>
+                            </Button.Group>
+                        </Modal.Footer>
+                    </Modal.Content>
+                </Modal>
 
 
             </VStack>
@@ -260,6 +358,10 @@ const styles = StyleSheet.create({
         color: "#525f7f",
         fontSize: ".875rem"
     },
+    textoAnonimo: {
+        color: "#EA4335",
+        fontSize: "1rem"
+    },
     input: {
         backgroundColor: '#fff',
         width: '60%',
@@ -300,5 +402,11 @@ const styles = StyleSheet.create({
         padding: '15px',
         width: '100%',
 
+    },
+    categoria: {
+        marginTop: 20,
+        justifyContent: "flex-end",
+        alignItems: "baseline",
+        color: "#EA4335"
     }
 });
