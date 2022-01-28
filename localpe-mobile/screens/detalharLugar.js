@@ -54,6 +54,7 @@ export default function DetalharLugar({ route, navigation }) {
             setNome(nome)
             setImagem(imagem)
             setDetalhe(detalhe)
+            setCategoria(categoria)
 
         }
 
@@ -231,6 +232,7 @@ export default function DetalharLugar({ route, navigation }) {
                         </Modal.Footer>
                     </Modal.Content>
                 </Modal>
+
 
 
             </VStack>

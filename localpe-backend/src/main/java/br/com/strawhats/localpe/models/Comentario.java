@@ -1,9 +1,6 @@
 package br.com.strawhats.localpe.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 @Entity
 public class Comentario {
@@ -12,6 +9,9 @@ public class Comentario {
     private String comentario;
     private Date dataCriacao;
     private Date dataAlteracao;
+    @JoinColumn()
+    private Long lugarId;
+    private String usuarioID;
 
     public Comentario(Long id, String comentario, Date dataCriacao, Date dataAlteracao) {
         this.id = id;
@@ -54,5 +54,19 @@ public class Comentario {
 
     public void setDataAlteracao(Date dataAlteracao) {
         this.dataAlteracao = dataAlteracao;
+    }
+    public Long getLugarId() {
+        return lugarId;
+    }
+
+    public void setLugarId(Long lugarId) {
+        this.lugarId = lugarId;
+    }
+    public String getUsuarioID() {
+        return usuarioID;
+    }
+
+    public void setUsuarioID(String usuarioID) {
+        this.usuarioID = usuarioID;
     }
 }

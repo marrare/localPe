@@ -80,7 +80,7 @@ public class LugarController {
         return lugarService.listarPorCategoria(categoria);
     }
 
-    @GetMapping("/comentarios/{lugarId}")
+    @GetMapping("/comentario/{lugarId}")
     public List<Comentario> listarComentarios(@PathVariable Long lugarId){
         return lugarService.listarComentarios(lugarId);
     }
@@ -92,6 +92,28 @@ public class LugarController {
 
     }
 
+    @PostMapping("/comentario/{lugarId}")
+    public String comentar(@RequestHeader String comentario, @PathVariable Long lugarId, @RequestHeader String usuarioId){
+        try {
+            lugarService.adicionarComentarios(comentario, lugarId, usuarioId);
+        }catch (Exception e){
+            e.printStackTrace();
+            return "Erro ao adicionar comentario :"+ e.getMessage();
+        }
+
+    return "Comentario adicionado";
+    }
+
+    @DeleteMapping("/comentario/{id}")
+    public String deletarComentario(@PathVariable Long id) {
+        try {
+            lugarService.excluirComentario(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Erro ao deletar" + e.getMessage();
+        }
+        return "Comentario deletado";
+    }
 
 
 

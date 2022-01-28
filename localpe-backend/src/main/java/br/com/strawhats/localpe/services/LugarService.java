@@ -8,6 +8,8 @@ import br.com.strawhats.localpe.models.Lugar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -45,11 +47,24 @@ public class LugarService {
         return  lugarDao.findByCategoriaIgnoreCaseContaining(categoria);
     }
 
-    public List<Comentario> listarComentarios(Long LugarId) {
-        return lugarDao.getComentariosByLugar_id(LugarId);
+    public List<Comentario> listarComentarios(Long lugarId) {
+        return comentarioDao.findAllByLugarId(lugarId);
     }
     
     public List<Lugar> pesquisarLugares(String lugar){
            return lugarDao.findByNomeIgnoreCaseContaining(lugar);
+    }
+
+    public void adicionarComentarios(String comentario, Long lugarId, String usuarioId) {
+        Comentario novoComentario = new Comentario();
+        novoComentario.setLugarId(lugarId);
+        novoComentario.setComentario(comentario);
+        novoComentario.setDataAlteracao(new Date());
+        novoComentario.setUsuarioID(usuarioId);
+        comentarioDao.save(novoComentario);
+    }
+
+    public void excluirComentario(Long id) {
+        comentarioDao.deleteById(id);
     }
 }

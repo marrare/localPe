@@ -43,13 +43,10 @@ export default function HomeScreen({ route, navigation }) {
                 console.log(error);
             });
     }
+
     useEffect(() => {
-
-
         resgatarDados()
-
     }, [])
-
 
     let placeToRender;
     if (service == "") {
@@ -134,11 +131,11 @@ export default function HomeScreen({ route, navigation }) {
         },
         {
             id: 6,
-            nome:"Atrações"
+            nome: "Atrações"
         },
         {
-            id:7,
-            nome:""
+            id: 7,
+            nome: ""
         }
 
     ]
@@ -171,8 +168,8 @@ export default function HomeScreen({ route, navigation }) {
 
                         resgatarDados()
                     }
-                }}
-            />
+                }
+                } />
             <View style={styles.select}>
 
             </View>
@@ -210,7 +207,7 @@ export default function HomeScreen({ route, navigation }) {
                                     style={{ padding: 0 }}
                                     source={{
                                         uri:
-                                            l.fotos.at(0),
+                                            l.fotos.at(0)
                                     }}
                                 />
                             </Card>
