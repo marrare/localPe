@@ -10,8 +10,8 @@ import java.util.List;
 public interface LugarDao extends JpaRepository<Lugar,Long> {
 
 
-    @Query("SELECT l.comentarios FROM Lugar l WHERE l.id = ?1")
-    public  List<Comentario> getComentariosByLugar_id(Long id);
+//    @Query("SELECT * FROM comentarios l WHERE l.id = ?1")
+//    public  List<Comentario> getComentariosByLugar_id(Long id);
 
 
     List<Lugar> findByNomeIgnoreCaseContaining(String lugar);
