@@ -10,6 +10,7 @@ import { Header as HeaderRNE, HeaderProps, Icon, SafeAreaView, Card } from 'reac
 // import {  } from 'native-base'
 import { MaterialIcons } from "@expo/vector-icons"
 import {
+    Toast,
     Button,
     Image,
     NativeBaseProvider,
@@ -35,33 +36,39 @@ export default function Login({ route, navigation }) {
 
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
-  
+
     const firebaseConfig = {
-      apiKey: "AIzaSyCDGOU1OYD2Y6B2XTM3Qi6u2EYfqzHixHI",
-      authDomain: "localpe-1dc7a.firebaseapp.com",
-      projectId: "localpe-1dc7a",
-      storageBucket: "localpe-1dc7a.appspot.com",
-      messagingSenderId: "1006900573391",
-      appId: "1:1006900573391:web:d441b9489baf727b67b3ba"
+        apiKey: "AIzaSyCDGOU1OYD2Y6B2XTM3Qi6u2EYfqzHixHI",
+        authDomain: "localpe-1dc7a.firebaseapp.com",
+        projectId: "localpe-1dc7a",
+        storageBucket: "localpe-1dc7a.appspot.com",
+        messagingSenderId: "1006900573391",
+        appId: "1:1006900573391:web:d441b9489baf727b67b3ba"
     };
-  
+
     function loginFirebase() {
-      const auth = getAuth();
-      signInWithEmailAndPassword(auth, email, senha)
-        .then((userCredential) => {
-          console.log("conectado")
-          const user = userCredential.user;
-          navigation.navigate("userLogado")
-          
-          // ...
-        })
-        .catch((error) => {
-          console.log("não conectado")
-          const errorCode = error.code;
-          const errorMessage = error.message;
-        });
+        const auth = getAuth();
+        signInWithEmailAndPassword(auth, email, senha)
+            .then((userCredential) => {
+                console.log("conectado")
+                const user = userCredential.user;
+                navigation.navigate("userLogado")
+                Toast.show({
+                    title: "Olá, seja bem-vindo de volta",
+                    status: "info",
+                    placement: "top-right",
+                    description: "Que tal ver alguns lugares que você ainda não foi?"
+                });
+
+                // ...
+            })
+            .catch((error) => {
+                console.log("não conectado")
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
     }
-  
+
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
 
@@ -97,8 +104,8 @@ export default function Login({ route, navigation }) {
                     <VStack space={3}>
 
                         <Input style={styles.inputLogin}
-                               value={email}
-                               onChangeText={email => setEmail(email)}
+                            value={email}
+                            onChangeText={email => setEmail(email)}
 
                             InputLeftElement={
                                 <Icon
@@ -108,11 +115,11 @@ export default function Login({ route, navigation }) {
                                     color="muted.400"
                                 />
                             }
-                            placeholder="Usuário"
+                            placeholder="E-mail"
                         />
                         <Input style={styles.inputLogin}
-                               value={senha}
-                               onChangeText={senha => setSenha(senha)}
+                            value={senha}
+                            onChangeText={senha => setSenha(senha)}
 
                             type="password"
                             InputRightElement={
@@ -132,7 +139,7 @@ export default function Login({ route, navigation }) {
                             mt="1">
                             Esqueceu a senha?
                         </Link>
-                        <Button onPress={() => {loginFirebase()}} style={styles.button} mt="2" colorScheme="indigo" _text={{ color: 'white' }}>
+                        <Button onPress={() => { loginFirebase() }} style={styles.button} mt="2" colorScheme="indigo" _text={{ color: 'white' }}>
                             Login
                         </Button>
 
