@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, StatusBar, TextInput, Touchable, TouchableOpacity } from 'react-native';
 import { Linking, StyleProp, TextStyle, ViewStyle, } from 'react-native';
 import { FlatList, ActivityIndicator } from 'react-native';
-import { Header as HeaderRNE, HeaderProps, SafeAreaView, Card } from 'react-native-elements';
+import { Header as HeaderRNE, HeaderProps, Icon, SafeAreaView, Card } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import axios from 'axios';
 import ListaLugares from '../data/lugares.js'
@@ -11,13 +11,11 @@ import {
     Select,
     CheckIcon,
     Avatar,
-    Icon,
     Button,
     Image,
     NativeBaseProvider,
     Box,
     Text,
-    Modal,
     Input,
     Heading,
     VStack,
@@ -27,41 +25,46 @@ import {
     HStack,
     Divider,
 } from 'native-base';
+import list from '../data/lugares.js';
 
-export default function UserLogado({ route, navigation }) {
-    const [showModal, setShowModal] = useState(false);
+export default function HomeScreen({ route, navigation }) {
     let [service, setService] = React.useState("");
     // let [placeToRender, setPlace] = useState([]);
-    // const [dados, setDados] = useState([]);
+    const [dados, setDados] = useState([]);
     const [logged, setLogged] = useState();
+
+    function resgatarDados() {
+        axios('http://52.71.103.14:8080/lugares')
+            .then(function (response) {
+                setDados(response.data);
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
     useEffect(() => {
-        if (route.params) {
-            const { isLoggedIn } = route.params
-            setLogged(isLoggedIn)
 
 
-        }
-    })
+        resgatarDados()
+
+    }, [])
+
 
     let placeToRender;
     if (service == "") {
-        placeToRender = ListaLugares;
+        placeToRender = dados;
     } else {
-        placeToRender = ListaLugares.filter(function (lugar) {
-            return lugar.category == service;
+        placeToRender = dados.filter(function (lugar) {
+            return lugar.categoria == service;
         });
     }
-
+    console.log(dados);
     console.log(placeToRender);
 
 
 
 
-
-
-    const lugares = [
-
-    ]
     const categorias = [
         {
             id: 1,
@@ -83,30 +86,22 @@ export default function UserLogado({ route, navigation }) {
             id: 5,
             nome: "Igreja"
         },
+        {
+            id: 6,
+            nome: "Atrações"
+        },
+        {
+            id: 7,
+            nome: ""
+        }
 
     ]
-
-
-    useEffect(() => {
-
-        function resgatarDados() {
-            axios('http://localhost:19006/listarLugares')
-                .then(function (response) {
-                    setDados(response.data);
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        }
-        resgatarDados()
-
-    }, [])
 
 
     return (
 
         <NativeBaseProvider>
+
             <HeaderRNE backgroundColor='#EA4335'
                 leftComponent={
                     <View>
@@ -115,7 +110,7 @@ export default function UserLogado({ route, navigation }) {
                 }
                 rightComponent={
                     <View style={styles.headerRight} >
-                        <Avatar onPress={() => setShowModal(true)}
+                        <Avatar size="sm" onPress={() => setShowModal(true)}
                             bg="light.200"
                             source={{
                                 uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Breezeicons-actions-22-im-user.svg/1200px-Breezeicons-actions-22-im-user.svg.png",
@@ -128,43 +123,34 @@ export default function UserLogado({ route, navigation }) {
                 }
             //centerComponent={{ text: 'Header', style: styles.heading }}
             />
-            <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-                <Modal.Content maxWidth="400px">
-                    <Modal.CloseButton />
-                    <Modal.Header>Contact Us</Modal.Header>
-                    <Modal.Body>
-                        <FormControl>
-                            <FormControl.Label>Name</FormControl.Label>
-                            <Input />
-                        </FormControl>
-                        <FormControl mt="3">
-                            <FormControl.Label>Email</FormControl.Label>
-                            <Input />
-                        </FormControl>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button.Group space={2}>
-                            <Button variant="ghost" colorScheme="blueGray" onPress={() => {
-                                setShowModal(false);
-                            }}>
-                                Cancel
-                            </Button>
-                            <Button onPress={() => {
-                                setShowModal(false);
-                            }}>
-                                Save
-                            </Button>
-                        </Button.Group>
-                    </Modal.Footer>
-                </Modal.Content>
-            </Modal>
-            <Image style={styles.imagem}
+
+            < Image style={styles.imagem}
                 source={{ uri: 'http://www.qualviagem.com.br/wp-content/uploads/2015/11/Olinda7_Marcio-Silva.jpg' }}
                 containerStyle={styles.item}
-                PlaceholderContent={<ActivityIndicator />}
+                PlaceholderContent={< ActivityIndicator />}
             />
+            < TextInput //Caixa de pesquisa
+                style={styles.input}
+                placeholder="Search..."
+                onChangeText={text => {
+                    if (text.trim().length >= 2) {
+                        axios('http://52.71.103.14:8080/lugares/p/'.concat(text))
+                            .then(function (response) {
+                                setDados(response.data);
+                            })
+                            .catch(function (error) {
+                                console.log("erro ao buscar")
+                            });
+                    } else {
 
-            <Select style={styles.select} selectedValue={service} accessibilityLabel="Choose Service" placeholder="Selecione a categoria" _selectedItem={{
+                        resgatarDados()
+                    }
+                }}
+            />
+            <View style={styles.select}>
+
+            </View>
+            <Select selectedValue={service} accessibilityLabel="Choose Service" placeholder="Selecione a categoria" _selectedItem={{
                 bg: "teal.600",
                 endIcon: <CheckIcon size="5" />
             }} mt={1} onValueChange={itemValue => setService(itemValue)}>
@@ -174,19 +160,30 @@ export default function UserLogado({ route, navigation }) {
                     ))}
 
             </Select>
+
+
+
             <VStack alignItems="center">
                 <View style={styles.card}>
+
                     {
                         placeToRender.map((l, i) => (
 
-                            <Card>
-                                <Card.Title>{l.name}</Card.Title>
+                            <Card >
+                                <Card.Title>{l.nome}</Card.Title>
                                 <Card.Divider />
-                                <Card.Image
+                                <Card.Image onPress={() => navigation.navigate('detalharLugar', {
+                                    nome: l.nome,
+                                    detalhe: l.descricao,
+                                    imagem: l.fotos.at(0),
+                                    id: l.id,
+                                    categoria: l.categoria
+
+                                })}
                                     style={{ padding: 0 }}
                                     source={{
                                         uri:
-                                            l.avatar_url,
+                                            l.fotos.at(0),
                                     }}
                                 />
                             </Card>
@@ -196,11 +193,17 @@ export default function UserLogado({ route, navigation }) {
             </VStack>
 
 
-        </NativeBaseProvider>
+        </NativeBaseProvider >
     );
 }
 
 const styles = StyleSheet.create({
+    select: {
+
+        marginTop: "20px"
+
+
+    },
     container: {
         flex: 1,
         backgroundColor: '#fff',
@@ -238,7 +241,7 @@ const styles = StyleSheet.create({
         height: 30,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#c41414',
+        backgroundColor: '#EA4335',
         borderBottomColor: '#fff'
     },
     headerContainer: {
@@ -285,8 +288,8 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         borderRadius: '2%',
         position: 'absolute',
-
-        top: 220,
+        bottom: "20px",
+        top: 170,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,

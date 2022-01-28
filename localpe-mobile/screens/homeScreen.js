@@ -33,19 +33,19 @@ export default function HomeScreen({ route, navigation }) {
     const [dados, setDados] = useState([]);
     const [logged, setLogged] = useState();
 
-
+    function resgatarDados() {
+        axios('http://52.71.103.14:8080/lugares')
+            .then(function (response) {
+                setDados(response.data);
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
     useEffect(() => {
 
-        function resgatarDados() {
-            axios('http://52.71.103.14:8080/lugares')
-                .then(function (response) {
-                    setDados(response.data);
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        }
+
         resgatarDados()
 
     }, [])
@@ -132,6 +132,14 @@ export default function HomeScreen({ route, navigation }) {
             id: 5,
             nome: "Igreja"
         },
+        {
+            id: 6,
+            nome:"Atrações"
+        },
+        {
+            id:7,
+            nome:""
+        }
 
     ]
 
@@ -161,16 +169,7 @@ export default function HomeScreen({ route, navigation }) {
                             });
                     } else {
 
-                        function resgatarDados() {
-                            axios('http://52.71.103.14:8080/lugares')
-                                .then(function (response) {
-                                    setDados(response.data);
-                                    console.log(response);
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                });
-                        }
+                        resgatarDados()
                     }
                 }}
             />
@@ -203,7 +202,9 @@ export default function HomeScreen({ route, navigation }) {
                                     nome: l.nome,
                                     detalhe: l.descricao,
                                     imagem: l.fotos.at(0),
-                                    id: l.id
+                                    id: l.id,
+                                    categoria: l.categoria
+
 
                                 })}
                                     style={{ padding: 0 }}
@@ -315,7 +316,7 @@ const styles = StyleSheet.create({
         borderRadius: '2%',
         position: 'absolute',
         bottom: "20px",
-        top: 182,
+        top: 170,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
