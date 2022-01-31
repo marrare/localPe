@@ -56,6 +56,11 @@ export default function LoginScreen ({ route, navigation }) {
                 });
             })
             .catch((error) => {
+                Toast.show({
+                    title: "Usuário ou senha incorreto",
+                    status: "erro",
+                    placement: "top-right"
+                });
                 console.log("não conectado")
                 const errorCode = error.code;
                 const errorMessage = error.message;
